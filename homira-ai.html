@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Homira — Modern Home Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --orange:#FF6A00;
+  --orange-light:#FF8C3A;
+  --orange-soft:#FFF3EB;
+  --navy:#1E2A38;
+  --navy-light:#2C3E52;
+  --charcoal:#3D4852;
+  --grey:#F7F7F7;
+  --grey2:#EFEFEF;
+  --white:#FFFFFF;
+  --text:#1E2A38;
+  --text-muted:#6B7280;
+  --border:#E5E7EB;
+  --success:#10B981;
+  --error:#EF4444;
+  --shadow:0 4px 24px rgba(30,42,56,0.08);
+  --shadow-lg:0 12px 48px rgba(30,42,56,0.14);
+  --radius:14px;
+  --radius-sm:8px;
+  --font:'Sora',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);color:var(--text);background:var(--white);overflow-x:hidden;}
+h1,h2,h3,h4,h5{font-family:var(--font);}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:var(--font-body);}
+input,textarea,select{font-family:var(--font-body);}
+
+/* ── UTILITY ── */
+.container{max-width:1140px;margin:0 auto;padding:0 24px;}
+.hidden{display:none!important;}
+.flex{display:flex;}
+.items-center{align-items:center;}
+.justify-between{justify-content:space-between;}
+.gap-8{gap:8px;}
+.gap-16{gap:16px;}
+.text-orange{color:var(--orange);}
+.text-muted{color:var(--text-muted);}
+.fw-500{font-weight:500;}
+.fw-600{font-weight:600;}
+.fw-700{font-weight:700;}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:all .3s;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;max-width:1140px;margin:0 auto;padding:0 24px;}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--font);font-weight:700;font-size:20px;color:var(--navy);}
+.nav-logo-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.nav-logo-icon svg{width:20px;height:20px;}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--charcoal);transition:.2s;cursor:pointer;}
+.nav-links a:hover{color:var(--orange);}
+.nav-actions{display:flex;gap:10px;align-items:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 22px;border-radius:99px;font-size:14px;font-weight:500;border:none;transition:all .2s;cursor:pointer;}
+.btn-primary{background:var(--orange);color:#fff;}
+.btn-primary:hover{background:var(--orange-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,106,0,0.3);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--border);}
+.btn-outline:hover{border-color:var(--navy);background:var(--grey);}
+.btn-ghost{background:transparent;color:var(--text-muted);border:none;}
+.btn-lg{padding:14px 32px;font-size:16px;border-radius:99px;}
+.btn-dark{background:var(--navy);color:#fff;}
+.btn-dark:hover{background:var(--navy-light);transform:translateY(-1px);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:22px;height:2px;background:var(--navy);border-radius:2px;transition:.3s;}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:20px 24px;z-index:999;flex-direction:column;gap:16px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:15px;font-weight:500;color:var(--charcoal);cursor:pointer;padding:8px 0;border-bottom:1px solid var(--border);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast-item{background:var(--navy);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:slideIn .3s ease;min-width:240px;}
+.toast-item.success{background:var(--success);}
+.toast-item.error{background:var(--error);}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+
+/* ── HOME PAGE ── */
+.hero{padding:140px 0 100px;background:linear-gradient(135deg,#F9F6F2 0%,#FFF8F4 50%,#F7F7F7 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,106,0,0.08) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(30,42,56,0.04) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--orange-soft);color:var(--orange);padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:24px;}
+.hero-badge-dot{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.hero h1{font-size:clamp(36px,5vw,58px);font-weight:700;line-height:1.1;letter-spacing:-1.5px;color:var(--navy);margin-bottom:20px;}
+.hero h1 .accent{color:var(--orange);}
+.hero-sub{font-size:18px;color:var(--text-muted);font-weight:400;line-height:1.6;margin-bottom:36px;max-width:480px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-stats{display:flex;gap:32px;margin-top:48px;}
+.stat-item{display:flex;flex-direction:column;}
+.stat-num{font-family:var(--font);font-size:28px;font-weight:700;color:var(--navy);}
+.stat-label{font-size:13px;color:var(--text-muted);margin-top:2px;}
+.hero-visual{display:flex;justify-content:center;align-items:center;}
+.hero-card-stack{position:relative;width:360px;height:420px;}
+.hero-card{background:#fff;border-radius:20px;box-shadow:var(--shadow-lg);padding:24px;position:absolute;}
+.hero-card-main{width:300px;top:40px;left:30px;}
+.hero-card-float{width:200px;background:var(--navy);color:#fff;top:10px;right:0;border-radius:16px;padding:16px;}
+.hero-card-float2{width:200px;bottom:30px;right:0;border-radius:16px;}
+.card-service-icon{width:44px;height:44px;background:var(--orange-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.card-service-icon svg{width:22px;height:22px;color:var(--orange);}
+.card-service-name{font-family:var(--font);font-weight:600;font-size:16px;margin-bottom:4px;}
+.card-service-price{font-size:13px;color:var(--text-muted);}
+.card-float-label{font-size:11px;font-weight:600;letter-spacing:.5px;opacity:.7;margin-bottom:6px;}
+.card-float-value{font-size:22px;font-weight:700;}
+.card-float-sub{font-size:12px;opacity:.6;margin-top:2px;}
+.card-tag{display:inline-flex;align-items:center;gap:6px;background:var(--orange-soft);color:var(--orange);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:10px;}
+.card-rating{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;}
+.star{color:#F59E0B;}
+
+/* features */
+.features{padding:100px 0;background:#fff;}
+.section-header{text-align:center;margin-bottom:64px;}
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:var(--orange-soft);color:var(--orange);padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:16px;}
+.section-title{font-size:clamp(28px,4vw,42px);font-weight:700;letter-spacing:-1px;color:var(--navy);margin-bottom:16px;}
+.section-sub{font-size:16px;color:var(--text-muted);max-width:520px;margin:0 auto;line-height:1.7;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.feature-card{background:var(--grey);border-radius:var(--radius);padding:32px;transition:.3s;border:1px solid transparent;}
+.feature-card:hover{border-color:var(--orange);background:#fff;box-shadow:var(--shadow);}
+.feature-icon{width:52px;height:52px;background:var(--navy);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.feature-icon svg{width:24px;height:24px;color:#fff;}
+.feature-title{font-family:var(--font);font-weight:600;font-size:18px;margin-bottom:10px;}
+.feature-desc{font-size:14px;color:var(--text-muted);line-height:1.7;}
+
+/* services preview */
+.services-preview{padding:100px 0;background:var(--navy);}
+.services-preview .section-tag{background:rgba(255,106,0,0.15);color:var(--orange-light);}
+.services-preview .section-title{color:#fff;}
+.services-preview .section-sub{color:rgba(255,255,255,0.6);}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.service-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius);padding:28px;cursor:pointer;transition:.3s;}
+.service-card:hover{background:rgba(255,255,255,0.1);border-color:var(--orange);transform:translateY(-4px);}
+.service-card-icon{width:56px;height:56px;background:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.service-card-icon svg{width:28px;height:28px;color:#fff;}
+.service-card-name{font-family:var(--font);font-weight:600;font-size:20px;color:#fff;margin-bottom:8px;}
+.service-card-desc{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:20px;}
+.service-card-price{font-size:13px;color:var(--orange-light);font-weight:500;margin-bottom:16px;}
+.service-card-btn{background:rgba(255,106,0,0.15);color:var(--orange-light);border:1px solid rgba(255,106,0,0.3);padding:8px 18px;border-radius:99px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;}
+.service-card-btn:hover{background:var(--orange);color:#fff;}
+
+/* how it works */
+.how{padding:100px 0;background:#fff;}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
+.steps::before{content:'';position:absolute;top:30px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.step{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;}
+.step-num{width:60px;height:60px;border-radius:50%;background:var(--grey);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:700;font-size:20px;color:var(--navy);margin-bottom:20px;position:relative;z-index:1;}
+.step.active .step-num{background:var(--orange);border-color:var(--orange);color:#fff;}
+.step-title{font-family:var(--font);font-weight:600;font-size:16px;margin-bottom:8px;}
+.step-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+
+/* testimonials */
+.testimonials{padding:100px 0;background:var(--grey);}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.testimonial-card{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);}
+.testimonial-stars{display:flex;gap:3px;margin-bottom:14px;}
+.testimonial-text{font-size:14px;color:var(--charcoal);line-height:1.7;margin-bottom:20px;font-style:italic;}
+.testimonial-author{display:flex;align-items:center;gap:12px;}
+.author-avatar{width:40px;height:40px;border-radius:50%;background:var(--orange-soft);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-weight:700;color:var(--orange);font-size:14px;}
+.author-name{font-weight:600;font-size:14px;}
+.author-loc{font-size:12px;color:var(--text-muted);}
+
+/* CTA */
+.cta-section{padding:100px 0;background:linear-gradient(135deg,var(--orange) 0%,#FF4500 100%);}
+.cta-inner{text-align:center;}
+.cta-title{font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:16px;}
+.cta-sub{font-size:18px;color:rgba(255,255,255,0.8);margin-bottom:40px;}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-white{background:#fff;color:var(--orange);}
+.btn-white:hover{background:rgba(255,255,255,0.9);transform:translateY(-1px);}
+.btn-outline-white{background:transparent;color:#fff;border:2px solid rgba(255,255,255,0.4);}
+.btn-outline-white:hover{background:rgba(255,255,255,0.1);}
+
+/* footer */
+footer{background:var(--navy);color:#fff;padding:64px 0 32px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.footer-brand p{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:14px;max-width:280px;}
+.footer-col h4{font-family:var(--font);font-weight:600;font-size:14px;letter-spacing:.5px;margin-bottom:16px;color:rgba(255,255,255,0.9);}
+.footer-col a{display:block;font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:10px;cursor:pointer;transition:.2s;}
+.footer-col a:hover{color:var(--orange);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.08);padding-top:28px;display:flex;align-items:center;justify-content:space-between;}
+.footer-copy{font-size:13px;color:rgba(255,255,255,0.3);}
+.social-links{display:flex;gap:12px;}
+.social-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;}
+.social-btn:hover{background:var(--orange);}
+.social-btn svg{width:16px;height:16px;color:#fff;}
+
+/* ── SERVICES PAGE ── */
+.page-hero{padding:120px 0 60px;background:linear-gradient(135deg,#F9F6F2,#FFF8F4);}
+.page-hero-title{font-size:clamp(32px,4vw,48px);font-weight:700;letter-spacing:-1px;color:var(--navy);margin-bottom:12px;}
+.page-hero-sub{font-size:16px;color:var(--text-muted);}
+.services-full{padding:60px 0 100px;}
+.service-section{margin-bottom:64px;}
+.service-section-header{display:flex;align-items:center;gap:16px;margin-bottom:28px;}
+.service-section-icon{width:52px;height:52px;background:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;}
+.service-section-icon svg{width:26px;height:26px;color:#fff;}
+.service-section-title{font-family:var(--font);font-weight:700;font-size:24px;}
+.service-section-sub{font-size:14px;color:var(--text-muted);margin-top:2px;}
+.sub-services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.sub-service-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:24px;cursor:pointer;transition:.3s;}
+.sub-service-card:hover{border-color:var(--orange);box-shadow:var(--shadow);}
+.sub-service-name{font-family:var(--font);font-weight:600;font-size:16px;margin-bottom:6px;}
+.sub-service-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;}
+.sub-service-footer{display:flex;align-items:center;justify-content:space-between;}
+.sub-service-price{font-family:var(--font);font-weight:700;font-size:18px;color:var(--orange);}
+.sub-service-book{background:var(--orange-soft);color:var(--orange);border:none;padding:7px 16px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;}
+.sub-service-book:hover{background:var(--orange);color:#fff;}
+
+/* ── BOOKING PAGE ── */
+.booking-page{padding:100px 0;background:var(--grey);}
+.booking-container{max-width:760px;margin:0 auto;}
+.booking-steps{display:flex;gap:0;margin-bottom:48px;background:#fff;border-radius:var(--radius);padding:6px;box-shadow:var(--shadow);}
+.booking-step-tab{flex:1;padding:12px;text-align:center;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-muted);transition:.2s;cursor:pointer;}
+.booking-step-tab.active{background:var(--orange);color:#fff;}
+.booking-step-tab.done{color:var(--orange);}
+.booking-panel{display:none;}
+.booking-panel.active{display:block;}
+.booking-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:36px;}
+.booking-title{font-family:var(--font);font-weight:700;font-size:24px;margin-bottom:6px;}
+.booking-sub{font-size:14px;color:var(--text-muted);margin-bottom:32px;}
+.form-group{margin-bottom:20px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.form-input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);background:#fff;transition:.2s;outline:none;}
+.form-input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,106,0,0.1);}
+.form-select{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);background:#fff;appearance:none;cursor:pointer;}
+.form-select:focus{border-color:var(--orange);outline:none;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.service-options{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:8px;}
+.service-option{background:var(--grey);border:2px solid transparent;border-radius:12px;padding:16px;cursor:pointer;text-align:center;transition:.2s;}
+.service-option:hover{border-color:var(--orange-light);}
+.service-option.selected{border-color:var(--orange);background:var(--orange-soft);}
+.service-option-icon{font-size:24px;margin-bottom:8px;}
+.service-option-name{font-size:13px;font-weight:600;}
+.sub-options{display:flex;flex-direction:column;gap:10px;}
+.sub-option{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:.2s;}
+.sub-option:hover{border-color:var(--orange-light);}
+.sub-option.selected{border-color:var(--orange);background:var(--orange-soft);}
+.sub-option-name{font-size:14px;font-weight:500;}
+.sub-option-price{font-family:var(--font);font-weight:700;color:var(--orange);}
+.price-summary{background:var(--grey);border-radius:12px;padding:20px;margin-top:24px;}
+.price-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;color:var(--charcoal);}
+.price-row.total{font-weight:700;font-size:16px;color:var(--navy);border-top:1px solid var(--border);padding-top:12px;margin-top:4px;}
+.booking-nav{display:flex;justify-content:space-between;margin-top:28px;}
+.success-container{text-align:center;padding:60px 0;}
+.success-icon{width:80px;height:80px;background:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;}
+.success-icon svg{width:40px;height:40px;color:#fff;}
+.success-title{font-family:var(--font);font-size:28px;font-weight:700;color:var(--navy);margin-bottom:10px;}
+.success-sub{font-size:16px;color:var(--text-muted);margin-bottom:8px;}
+.booking-id{font-family:var(--font);font-size:20px;font-weight:700;color:var(--orange);margin-bottom:32px;}
+
+/* ── AUTH PAGE ── */
+.auth-page{padding:100px 0;min-height:100vh;background:linear-gradient(135deg,#F9F6F2,#FFF8F4);display:flex;align-items:center;}
+.auth-container{max-width:440px;margin:0 auto;width:100%;}
+.auth-card{background:#fff;border-radius:20px;box-shadow:var(--shadow-lg);padding:44px;}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:32px;}
+.auth-title{font-family:var(--font);font-size:26px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.auth-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;}
+.auth-tabs{display:flex;background:var(--grey);border-radius:10px;padding:4px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:10px;text-align:center;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:.2s;color:var(--text-muted);}
+.auth-tab.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.divider span{font-size:12px;color:var(--text-muted);}
+.auth-switch{text-align:center;font-size:14px;color:var(--text-muted);margin-top:20px;}
+.auth-switch span{color:var(--orange);font-weight:600;cursor:pointer;}
+
+/* ── DASHBOARD ── */
+.dashboard-page{padding-top:68px;min-height:100vh;background:var(--grey);display:flex;}
+.dashboard-sidebar{width:240px;background:var(--navy);color:#fff;padding:28px 0;display:flex;flex-direction:column;min-height:calc(100vh - 68px);position:fixed;top:68px;left:0;}
+.sidebar-nav{padding:0 12px;flex:1;}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:.2s;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+.sidebar-item:hover,.sidebar-item.active{background:rgba(255,255,255,0.1);color:#fff;}
+.sidebar-item.active{background:var(--orange)!important;color:#fff!important;}
+.sidebar-item svg{width:18px;height:18px;flex-shrink:0;}
+.sidebar-section-label{font-size:10px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.3);padding:16px 16px 8px;text-transform:uppercase;}
+.dashboard-main{margin-left:240px;flex:1;padding:32px;}
+.dashboard-header{margin-bottom:28px;}
+.dashboard-title{font-family:var(--font);font-size:24px;font-weight:700;color:var(--navy);}
+.dashboard-sub{font-size:14px;color:var(--text-muted);margin-top:4px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+.stat-card-label{font-size:13px;color:var(--text-muted);margin-bottom:8px;}
+.stat-card-value{font-family:var(--font);font-size:28px;font-weight:700;color:var(--navy);}
+.stat-card-change{font-size:12px;color:var(--success);margin-top:4px;}
+.dashboard-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+.dash-card{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+.dash-card-title{font-family:var(--font);font-weight:600;font-size:16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.booking-table{width:100%;border-collapse:collapse;}
+.booking-table th{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.booking-table td{font-size:13px;padding:12px 12px;border-bottom:1px solid var(--border);color:var(--charcoal);}
+.status-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;}
+.status-pending{background:#FEF3C7;color:#92400E;}
+.status-confirmed{background:#D1FAE5;color:#065F46;}
+.status-completed{background:#DBEAFE;color:#1E40AF;}
+.status-cancelled{background:#FEE2E2;color:#991B1B;}
+.profile-panel{display:none;}
+.profile-panel.active{display:block;}
+
+/* ── ADMIN ── */
+.admin-sidebar{background:#111820!important;}
+.admin-sidebar .sidebar-item{color:rgba(255,255,255,0.55)!important;}
+.admin-sidebar .sidebar-item:hover,.admin-sidebar .sidebar-item.active-nav{background:rgba(255,255,255,0.08)!important;color:#fff!important;}
+.admin-action-bar{display:flex;gap:10px;justify-content:flex-end;margin-bottom:20px;}
+.badge-count{background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px;}
+.admin-table-actions{display:flex;gap:6px;}
+.action-btn{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;}
+.action-btn-confirm{background:#D1FAE5;color:#065F46;}
+.action-btn-complete{background:#DBEAFE;color:#1E40AF;}
+.action-btn-delete{background:#FEE2E2;color:#991B1B;}
+
+/* ── CONTACT PAGE ── */
+.contact-page{padding:120px 0 100px;}
+.contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;align-items:start;}
+.contact-info{display:flex;flex-direction:column;gap:24px;}
+.contact-item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:var(--grey);border-radius:var(--radius);}
+.contact-item-icon{width:44px;height:44px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-item-icon svg{width:20px;height:20px;color:#fff;}
+.contact-item-label{font-size:12px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;}
+.contact-item-value{font-size:15px;font-weight:500;color:var(--navy);}
+.contact-form-card{background:#fff;border-radius:20px;box-shadow:var(--shadow-lg);padding:36px;}
+.contact-form-title{font-family:var(--font);font-size:22px;font-weight:700;margin-bottom:6px;}
+.contact-form-sub{font-size:14px;color:var(--text-muted);margin-bottom:24px;}
+.map-section{margin-top:40px;background:var(--grey);border-radius:var(--radius);height:220px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);overflow:hidden;}
+.map-placeholder{text-align:center;color:var(--text-muted);}
+.whatsapp-float{position:fixed;bottom:28px;right:28px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,0.4);cursor:pointer;z-index:500;transition:.2s;}
+.whatsapp-float:hover{transform:scale(1.1);}
+.whatsapp-float svg{width:28px;height:28px;color:#fff;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .features-grid,.services-grid,.testimonials-grid{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .sub-services-grid{grid-template-columns:1fr;}
+  .service-options{grid-template-columns:1fr;}
+  .dashboard-sidebar{display:none;}
+  .dashboard-main{margin-left:0;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .dashboard-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .hero-stats{flex-wrap:wrap;gap:20px;}
+  .hero-actions{flex-direction:column;}
+  .steps{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .booking-card{padding:24px;}
+}
+
+/* Animation */
+.fade-in{opacity:0;transform:translateY(20px);animation:fadeIn .6s ease forwards;}
+@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}
+.delay-1{animation-delay:.1s;}
+.delay-2{animation-delay:.2s;}
+.delay-3{animation-delay:.3s;}
+</style>
+</head>
+<body>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/923314447719" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      Homira
+    </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('services')">Services</a>
+      <a onclick="showPage('booking')">Book Now</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="nav-actions" id="nav-actions">
+      <button class="btn btn-outline" onclick="showPage('auth')">Login</button>
+      <button class="btn btn-primary" onclick="showPage('booking')">Book Now</button>
+    </div>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a onclick="showPage('home');toggleMobile()">Home</a>
+  <a onclick="showPage('services');toggleMobile()">Services</a>
+  <a onclick="showPage('booking');toggleMobile()">Book Now</a>
+  <a onclick="showPage('contact');toggleMobile()">Contact</a>
+  <a onclick="showPage('auth');toggleMobile()">Login / Sign Up</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HOME PAGE
+═══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="fade-in">
+          <div class="hero-badge"><span class="hero-badge-dot"></span> Now Available in Islamabad & Rawalpindi</div>
+          <h1>Modern Home Services,<br><span class="accent">Simplified.</span></h1>
+          <p class="hero-sub">Get rates first. Confirm later. Verified professionals at your doorstep — on-demand, fixed pricing, no surprises.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-lg" onclick="showPage('booking')">Book a Service</button>
+            <button class="btn btn-outline btn-lg" onclick="showPage('services')">Explore Services</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item"><span class="stat-num">500+</span><span class="stat-label">Jobs Completed</span></div>
+            <div class="stat-item"><span class="stat-num">4.9★</span><span class="stat-label">Customer Rating</span></div>
+            <div class="stat-item"><span class="stat-num">30min</span><span class="stat-label">Avg. Response</span></div>
+          </div>
+        </div>
+        <div class="hero-visual fade-in delay-2">
+          <div class="hero-card-stack">
+            <div class="hero-card hero-card-main">
+              <div class="card-service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+              </div>
+              <div class="card-service-name">AC General Service</div>
+              <div class="card-service-price">Rs 1,500 fixed price</div>
+              <div style="margin-top:14px;display:flex;gap:8px;">
+                <span style="background:#D1FAE5;color:#065F46;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;">Verified Pro</span>
+                <span style="background:#FEF3C7;color:#92400E;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;">30 min away</span>
+              </div>
+            </div>
+            <div class="hero-card hero-card-float">
+              <div class="card-float-label">TODAY'S BOOKINGS</div>
+              <div class="card-float-value">24</div>
+              <div class="card-float-sub">↑ 12% vs yesterday</div>
+            </div>
+            <div class="hero-card hero-card-float2">
+              <div class="card-tag">★ 4.9</div>
+              <div class="card-rating">Rated #1 Home Service<br>in Islamabad 2024</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Why Homira</div>
+        <h2 class="section-title">Built for modern homeowners</h2>
+        <p class="section-sub">We've reinvented the home service experience from ground up — transparent, fast, and reliable.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+          <h3 class="feature-title">Verified Professionals</h3>
+          <p class="feature-desc">Every technician is background-checked, trained, and rated. You know exactly who's coming to your home before they arrive.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+          <h3 class="feature-title">Fixed, Transparent Pricing</h3>
+          <p class="feature-desc">See the exact price before you confirm. No hidden charges, no surprise bills. What you see is exactly what you pay.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+          <h3 class="feature-title">Fast Response Time</h3>
+          <p class="feature-desc">Average response in under 30 minutes. We dispatch the nearest available professional the moment you confirm your booking.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+          <h3 class="feature-title">Book in 60 Seconds</h3>
+          <p class="feature-desc">Select your service, pick a time, confirm. No phone calls, no waiting on hold. The entire booking takes under a minute.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+          <h3 class="feature-title">Service Guarantee</h3>
+          <p class="feature-desc">Not satisfied? We'll send another professional at no extra cost. Our quality guarantee backs every single service we provide.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg></div>
+          <h3 class="feature-title">24/7 WhatsApp Support</h3>
+          <p class="feature-desc">Real human support available around the clock via WhatsApp. We're always here when you need us, not just during business hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES PREVIEW -->
+  <section class="services-preview">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Our Services</div>
+        <h2 class="section-title">Everything your home needs</h2>
+        <p class="section-sub">From leaking pipes to AC maintenance — we handle it all with certified professionals.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" onclick="showPage('services')">
+          <div class="service-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22V12m0 0V2m0 10H2m10 0h10"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="service-card-name">Plumbing</div>
+          <div class="service-card-desc">Leakage repairs, pipe replacement, tap repair, drainage issues and more — handled by certified plumbers.</div>
+          <div class="service-card-price">Starting from Rs 800</div>
+          <button class="service-card-btn" onclick="event.stopPropagation();bookService('Plumbing')">Book Now</button>
+        </div>
+        <div class="service-card" onclick="showPage('services')">
+          <div class="service-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="service-card-name">Electrician</div>
+          <div class="service-card-desc">Switch repairs, fan installation, wiring issues, circuit breakers — all handled safely by our certified electricians.</div>
+          <div class="service-card-price">Starting from Rs 700</div>
+          <button class="service-card-btn" onclick="event.stopPropagation();bookService('Electrician')">Book Now</button>
+        </div>
+        <div class="service-card" onclick="showPage('services')">
+          <div class="service-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="service-card-name">AC Services</div>
+          <div class="service-card-desc">General service, gas refilling, installation and deep cleaning — keep your AC running at peak performance.</div>
+          <div class="service-card-price">Starting from Rs 1,500</div>
+          <button class="service-card-btn" onclick="event.stopPropagation();bookService('AC Services')">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Process</div>
+        <h2 class="section-title">How Homira works</h2>
+        <p class="section-sub">Four simple steps from booking to a perfectly fixed home.</p>
+      </div>
+      <div class="steps">
+        <div class="step active">
+          <div class="step-num">1</div>
+          <div class="step-title">Choose Service</div>
+          <div class="step-desc">Select from our range of professional home services with transparent pricing.</div>
+        </div>
+        <div class="step active">
+          <div class="step-num">2</div>
+          <div class="step-title">Book Online</div>
+          <div class="step-desc">Pick your preferred date and time. We confirm your booking instantly.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Pro Arrives</div>
+          <div class="step-desc">Our verified professional arrives on time, equipped with all necessary tools.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Job Done</div>
+          <div class="step-desc">Work completed to the highest standard. Pay the fixed price, rate the service.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Reviews</div>
+        <h2 class="section-title">Loved by homeowners</h2>
+        <p class="section-sub">Don't take our word for it — here's what our customers say.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"Booked a plumber at 10pm and he was at my door within 45 minutes. The price was exactly what was shown online. Absolutely amazing service."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AR</div>
+            <div><div class="author-name">Ahmed Raza</div><div class="author-loc">DHA Phase 2, Islamabad</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"My AC was not cooling at all. The technician came, diagnosed the issue, and refilled the gas. All done in under an hour. Highly recommended!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SN</div>
+            <div><div class="author-name">Sara Naveed</div><div class="author-loc">Bahria Town, Rawalpindi</div></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★☆</div>
+          <p class="testimonial-text">"Finally a home service that actually shows up on time! The electrician was professional, had all his tools, and explained everything clearly. Great experience."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">UK</div>
+            <div><div class="author-name">Usman Khan</div><div class="author-loc">F-10, Islamabad</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner">
+        <h2 class="cta-title">Ready to fix it? Book in 60 seconds.</h2>
+        <p class="cta-sub">Join thousands of homeowners who trust Homira for fast, reliable home services.</p>
+        <div class="cta-btns">
+          <button class="btn btn-white btn-lg" onclick="showPage('booking')">Book Now — It's Free</button>
+          <a href="https://wa.me/923314447719" target="_blank" class="btn btn-outline-white btn-lg">Chat on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo" style="color:#fff;">
+            <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            Homira
+          </div>
+          <p>Modern home services platform bringing trust, transparency, and speed to every household in Pakistan.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <a onclick="showPage('services')">Plumbing</a>
+          <a onclick="showPage('services')">Electrician</a>
+          <a onclick="showPage('services')">AC Services</a>
+          <a onclick="showPage('booking')">Book Now</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a onclick="showPage('home')">About Us</a>
+          <a onclick="showPage('contact')">Contact</a>
+          <a>Careers</a>
+          <a>Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a>Islamabad / Rawalpindi</a>
+          <a href="mailto:homira.pk@gmail.com">homira.pk@gmail.com</a>
+          <a href="https://wa.me/923314447719">WhatsApp: 0331-4447719</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2024 Homira. All rights reserved.</span>
+        <div class="social-links">
+          <a href="https://www.instagram.com/homira.pk" target="_blank" class="social-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://wa.me/923314447719" target="_blank" class="social-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SERVICES PAGE
+═══════════════════════════════════════════ -->
+<div class="page" id="page-services">
+  <div style="padding-top:68px;">
+    <div class="page-hero">
+      <div class="container">
+        <div class="section-tag" style="margin-bottom:12px;">All Services</div>
+        <h1 class="page-hero-title">Professional services,<br>fixed prices.</h1>
+        <p class="page-hero-sub">Choose a service and get an instant quote — no hidden charges, no surprises.</p>
+      </div>
+    </div>
+    <div class="services-full">
+      <div class="container">
+        <!-- Plumbing -->
+        <div class="service-section">
+          <div class="service-section-header">
+            <div class="service-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22V12m0 0V2m0 10H2m10 0h10"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div>
+              <div class="service-section-title">Plumbing</div>
+              <div class="service-section-sub">Certified plumbers for all water-related issues</div>
+            </div>
+          </div>
+          <div class="sub-services-grid">
+            <div class="sub-service-card">
+              <div class="sub-service-name">Leakage Fix</div>
+              <div class="sub-service-desc">Detect and repair pipe leaks, joint issues, and water seepage problems throughout your home.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 1,200</div>
+                <button class="sub-service-book" onclick="bookService('Plumbing','Leakage Fix',1200)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Pipe Replacement</div>
+              <div class="sub-service-desc">Full pipe replacement for damaged, corroded, or outdated plumbing systems in walls or exposed areas.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 3,500</div>
+                <button class="sub-service-book" onclick="bookService('Plumbing','Pipe Replacement',3500)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Tap Repair</div>
+              <div class="sub-service-desc">Fix dripping or broken taps, replace washers, and restore full water flow to your kitchen or bathroom.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 800</div>
+                <button class="sub-service-book" onclick="bookService('Plumbing','Tap Repair',800)">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Electrician -->
+        <div class="service-section">
+          <div class="service-section-header">
+            <div class="service-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="service-section-title">Electrician</div>
+              <div class="service-section-sub">Licensed electricians for safe, reliable electrical work</div>
+            </div>
+          </div>
+          <div class="sub-services-grid">
+            <div class="sub-service-card">
+              <div class="sub-service-name">Switch Repair</div>
+              <div class="sub-service-desc">Repair or replace faulty switches, sockets, and power outlets. Safe, quick, and professional.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 700</div>
+                <button class="sub-service-book" onclick="bookService('Electrician','Switch Repair',700)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Fan Installation</div>
+              <div class="sub-service-desc">Ceiling fan installation, removal, and replacement. Includes wiring check and safety inspection.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 1,500</div>
+                <button class="sub-service-book" onclick="bookService('Electrician','Fan Installation',1500)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Wiring Issue</div>
+              <div class="sub-service-desc">Diagnose and repair electrical wiring faults, short circuits, and tripping breaker problems.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 4,000</div>
+                <button class="sub-service-book" onclick="bookService('Electrician','Wiring Issue',4000)">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- AC -->
+        <div class="service-section">
+          <div class="service-section-header">
+            <div class="service-section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div>
+              <div class="service-section-title">AC Services</div>
+              <div class="service-section-sub">Expert AC technicians for all makes and models</div>
+            </div>
+          </div>
+          <div class="sub-services-grid">
+            <div class="sub-service-card">
+              <div class="sub-service-name">General Service</div>
+              <div class="sub-service-desc">Full AC service including filter cleaning, coil wash, drainage check, and performance optimization.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 1,500</div>
+                <button class="sub-service-book" onclick="bookService('AC Services','General Service',1500)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Gas Filling</div>
+              <div class="sub-service-desc">Refrigerant gas refill to restore full cooling capacity. Includes leak check and pressure test.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 5,500</div>
+                <button class="sub-service-book" onclick="bookService('AC Services','Gas Filling',5500)">Book Now</button>
+              </div>
+            </div>
+            <div class="sub-service-card">
+              <div class="sub-service-name">Installation</div>
+              <div class="sub-service-desc">New AC unit installation with bracket mounting, piping, and full electrical connection setup.</div>
+              <div class="sub-service-footer">
+                <div class="sub-service-price">Rs 4,000</div>
+                <button class="sub-service-book" onclick="bookService('AC Services','Installation',4000)">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     BOOKING PAGE
+═══════════════════════════════════════════ -->
+<div class="page" id="page-booking">
+  <div class="booking-page">
+    <div class="container">
+      <div class="booking-container">
+        <div style="text-align:center;margin-bottom:36px;">
+          <h1 style="font-size:32px;font-weight:700;letter-spacing:-0.5px;color:var(--navy);">Book a Service</h1>
+          <p style="color:var(--text-muted);margin-top:8px;">Get an instant price estimate before you confirm.</p>
+        </div>
+        <div class="booking-steps">
+          <div class="booking-step-tab active" id="btab-1">1. Service</div>
+          <div class="booking-step-tab" id="btab-2">2. Details</div>
+          <div class="booking-step-tab" id="btab-3">3. Confirm</div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="booking-panel active" id="bpanel-1">
+          <div class="booking-card">
+            <h2 class="booking-title">Select Service</h2>
+            <p class="booking-sub">Choose the type of service you need</p>
+            <div class="service-options">
+              <div class="service-option" id="sopt-Plumbing" onclick="selectService('Plumbing')">
+                <div class="service-option-icon">🔧</div>
+                <div class="service-option-name">Plumbing</div>
+              </div>
+              <div class="service-option" id="sopt-Electrician" onclick="selectService('Electrician')">
+                <div class="service-option-icon">⚡</div>
+                <div class="service-option-name">Electrician</div>
+              </div>
+              <div class="service-option" id="sopt-AC Services" onclick="selectService('AC Services')">
+                <div class="service-option-icon">❄️</div>
+                <div class="service-option-name">AC Services</div>
+              </div>
+            </div>
+            <div id="sub-services-list" style="margin-top:24px;display:none;">
+              <p class="form-label" style="margin-bottom:12px;">Select specific service:</p>
+              <div class="sub-options" id="sub-options-inner"></div>
+            </div>
+            <div id="price-summary-box" style="display:none;">
+              <div class="price-summary">
+                <div class="price-row"><span>Service</span><span id="ps-service">-</span></div>
+                <div class="price-row"><span>Base Price</span><span id="ps-price">-</span></div>
+                <div class="price-row"><span>Service Fee</span><span>Rs 0</span></div>
+                <div class="price-row total"><span>Total</span><span id="ps-total">-</span></div>
+              </div>
+            </div>
+            <div class="booking-nav">
+              <button class="btn btn-outline" onclick="showPage('home')">← Back</button>
+              <button class="btn btn-primary" onclick="nextStep(2)" id="btn-step2" disabled style="opacity:.4">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="booking-panel" id="bpanel-2">
+          <div class="booking-card">
+            <h2 class="booking-title">Your Details</h2>
+            <p class="booking-sub">Tell us where to send the professional</p>
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input class="form-input" id="b-name" type="text" placeholder="Enter your full name"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input class="form-input" id="b-phone" type="tel" placeholder="03XX-XXXXXXX"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred Date *</label>
+                <input class="form-input" id="b-date" type="date"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Preferred Time *</label>
+                <select class="form-input form-select" id="b-time">
+                  <option value="">Select time slot</option>
+                  <option>9:00 AM - 11:00 AM</option>
+                  <option>11:00 AM - 1:00 PM</option>
+                  <option>2:00 PM - 4:00 PM</option>
+                  <option>4:00 PM - 6:00 PM</option>
+                  <option>6:00 PM - 8:00 PM</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address *</label>
+              <input class="form-input" id="b-address" type="text" placeholder="House #, Street, Area, City"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Additional Notes</label>
+              <textarea class="form-input" id="b-notes" rows="3" placeholder="Describe the issue in detail (optional)"></textarea>
+            </div>
+            <div class="booking-nav">
+              <button class="btn btn-outline" onclick="nextStep(1)">← Back</button>
+              <button class="btn btn-primary" onclick="nextStep(3)">Review Booking →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="booking-panel" id="bpanel-3">
+          <div class="booking-card">
+            <h2 class="booking-title">Confirm Booking</h2>
+            <p class="booking-sub">Review your booking before confirming</p>
+            <div id="booking-summary" style="background:var(--grey);border-radius:12px;padding:20px;margin-bottom:24px;">
+            </div>
+            <div style="background:#FFF3EB;border:1px solid #FFD9B5;border-radius:10px;padding:14px 16px;margin-bottom:24px;font-size:13px;color:#7C2D12;">
+              ⚠️ <strong>Fixed Price Guarantee:</strong> The price shown is final. No hidden charges will be added after service completion.
+            </div>
+            <div class="booking-nav">
+              <button class="btn btn-outline" onclick="nextStep(2)">← Back</button>
+              <button class="btn btn-primary" onclick="confirmBooking()">✓ Confirm Booking</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="booking-panel" id="bpanel-success">
+          <div class="success-container">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 class="success-title">Booking Confirmed! 🎉</h2>
+            <p class="success-sub">Your booking ID is:</p>
+            <div class="booking-id" id="success-booking-id">HOM-000000</div>
+            <p style="font-size:14px;color:var(--text-muted);max-width:400px;margin:0 auto 32px;">We'll contact you on WhatsApp within 15 minutes to confirm the professional's arrival time.</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="showPage('home')">Back to Home</button>
+              <button class="btn btn-outline" onclick="showPage('dashboard')">View My Bookings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH PAGE
+═══════════════════════════════════════════ -->
+<div class="page" id="page-auth">
+  <div class="auth-page">
+    <div class="container">
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-logo">
+            <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <span style="font-family:var(--font);font-weight:700;font-size:20px;">Homira</span>
+          </div>
+          <div class="auth-tabs">
+            <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Login</div>
+            <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</div>
+          </div>
+
+          <!-- LOGIN -->
+          <div id="login-form">
+            <h2 class="auth-title">Welcome back</h2>
+            <p class="auth-sub">Login to view your bookings and manage your account.</p>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" id="l-email" type="email" placeholder="you@email.com"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input class="form-input" id="l-pass" type="password" placeholder="Enter your password"/>
+            </div>
+            <button class="btn btn-primary" style="width:100%;padding:14px;" onclick="doLogin()">Login to Account</button>
+            <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:12px;">
+              <span style="color:var(--orange);cursor:pointer;" onclick="doAdminLogin()">Login as Admin →</span>
+            </p>
+          </div>
+
+          <!-- SIGNUP -->
+          <div id="signup-form" style="display:none;">
+            <h2 class="auth-title">Create account</h2>
+            <p class="auth-sub">Join Homira and start booking trusted home services.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input class="form-input" id="s-fname" type="text" placeholder="Ali"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input class="form-input" id="s-lname" type="text" placeholder="Khan"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" id="s-email" type="email" placeholder="you@email.com"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" id="s-phone" type="tel" placeholder="03XX-XXXXXXX"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input class="form-input" id="s-pass" type="password" placeholder="Min. 8 characters"/>
+            </div>
+            <button class="btn btn-primary" style="width:100%;padding:14px;" onclick="doSignup()">Create Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     USER DASHBOARD
+═══════════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="dashboard-page">
+    <div class="dashboard-sidebar">
+      <div class="sidebar-nav">
+        <div class="sidebar-section-label">Menu</div>
+        <div class="sidebar-item active" onclick="switchDashPanel('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </div>
+        <div class="sidebar-item" onclick="switchDashPanel('bookings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          My Bookings
+        </div>
+        <div class="sidebar-item" onclick="switchDashPanel('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </div>
+        <div class="sidebar-section-label">Actions</div>
+        <div class="sidebar-item" onclick="showPage('booking')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          New Booking
+        </div>
+        <div class="sidebar-item" onclick="doLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Logout
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-main">
+      <!-- OVERVIEW -->
+      <div class="profile-panel active" id="dash-overview">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Welcome back, <span id="dash-username" class="text-orange">User</span> 👋</h1>
+          <p class="dashboard-sub">Here's a summary of your Homira account</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Bookings</div>
+            <div class="stat-card-value" id="ds-total">0</div>
+            <div class="stat-card-change">All time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Pending</div>
+            <div class="stat-card-value" id="ds-pending">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Completed</div>
+            <div class="stat-card-value" id="ds-completed">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Total Spent</div>
+            <div class="stat-card-value" id="ds-spent">Rs 0</div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">Recent Bookings</div>
+          <div id="dash-recent-bookings"></div>
+        </div>
+      </div>
+      <!-- BOOKINGS PANEL -->
+      <div class="profile-panel" id="dash-bookings">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">My Bookings</h1>
+          <p class="dashboard-sub">All your service bookings in one place</p>
+        </div>
+        <div class="dash-card">
+          <div id="dash-all-bookings"></div>
+        </div>
+      </div>
+      <!-- PROFILE PANEL -->
+      <div class="profile-panel" id="dash-profile">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">My Profile</h1>
+        </div>
+        <div class="dash-card" style="max-width:500px;">
+          <div id="profile-info"></div>
+          <button class="btn btn-primary" style="margin-top:20px;" onclick="doLogout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN DASHBOARD
+═══════════════════════════════════════════ -->
+<div class="page" id="page-admin">
+  <div class="dashboard-page">
+    <div class="dashboard-sidebar admin-sidebar">
+      <div class="sidebar-nav">
+        <div style="padding:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+          <div class="nav-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#FF6A00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <span style="font-family:var(--font);font-weight:700;color:#fff;">Admin Panel</span>
+        </div>
+        <div class="sidebar-section-label">Dashboard</div>
+        <div class="sidebar-item active-nav" id="adm-nav-overview" onclick="switchAdminPanel('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </div>
+        <div class="sidebar-item" id="adm-nav-bookings" onclick="switchAdminPanel('bookings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg>
+          All Bookings
+          <span class="badge-count" id="admin-badge">0</span>
+        </div>
+        <div class="sidebar-item" id="adm-nav-customers" onclick="switchAdminPanel('customers')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Customers
+        </div>
+        <div class="sidebar-section-label">Account</div>
+        <div class="sidebar-item" onclick="doLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Logout
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-main">
+      <!-- ADMIN OVERVIEW -->
+      <div class="profile-panel active" id="adm-overview">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Admin Dashboard</h1>
+          <p class="dashboard-sub">Homira Platform Overview</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Bookings</div>
+            <div class="stat-card-value" id="adm-total">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Pending</div>
+            <div class="stat-card-value" id="adm-pending" style="color:#D97706;">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Completed</div>
+            <div class="stat-card-value" id="adm-completed" style="color:var(--success);">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Total Revenue</div>
+            <div class="stat-card-value" id="adm-revenue" style="color:var(--orange);">Rs 0</div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">
+            Recent Bookings
+            <button class="btn btn-outline" style="font-size:12px;padding:6px 14px;" onclick="switchAdminPanel('bookings')">View All</button>
+          </div>
+          <div id="adm-recent"></div>
+        </div>
+      </div>
+      <!-- ALL BOOKINGS -->
+      <div class="profile-panel" id="adm-bookings">
+        <div class="dashboard-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <h1 class="dashboard-title">All Bookings</h1>
+            <p class="dashboard-sub">Manage and update all customer bookings</p>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div id="adm-all-bookings"></div>
+        </div>
+      </div>
+      <!-- CUSTOMERS -->
+      <div class="profile-panel" id="adm-customers">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Customers</h1>
+          <p class="dashboard-sub">Registered users on the platform</p>
+        </div>
+        <div class="dash-card">
+          <div id="adm-customers-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CONTACT PAGE
+═══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <div class="contact-page">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:60px;">
+        <div class="section-tag" style="margin-bottom:12px;">Contact Us</div>
+        <h1 style="font-size:clamp(28px,4vw,42px);font-weight:700;letter-spacing:-1px;color:var(--navy);margin-bottom:12px;">We're always here for you</h1>
+        <p style="font-size:16px;color:var(--text-muted);">Reach out via WhatsApp, email, or fill in the form — we respond within minutes.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">Location</div>
+              <div class="contact-item-value">Islamabad / Rawalpindi, Pakistan</div>
+            </div>
+          </div>
+          <a href="https://wa.me/923314447719" target="_blank" class="contact-item" style="text-decoration:none;cursor:pointer;">
+            <div class="contact-item-icon" style="background:#25D366;">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="color:#fff;width:20px;height:20px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">WhatsApp Only</div>
+              <div class="contact-item-value">0331-4447719</div>
+            </div>
+          </a>
+          <a href="mailto:homira.pk@gmail.com" class="contact-item" style="text-decoration:none;">
+            <div class="contact-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value">homira.pk@gmail.com</div>
+            </div>
+          </a>
+          <a href="https://www.instagram.com/homira.pk" target="_blank" class="contact-item" style="text-decoration:none;">
+            <div class="contact-item-icon" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="color:#fff;width:20px;height:20px;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">Instagram</div>
+              <div class="contact-item-value">@homira.pk</div>
+            </div>
+          </a>
+          <div class="map-section">
+            <div class="map-placeholder">
+              <div style="font-size:32px;margin-bottom:8px;">📍</div>
+              <div style="font-weight:600;color:var(--navy);">Islamabad / Rawalpindi</div>
+              <div style="font-size:13px;margin-top:4px;">Serving Bahria Town, DHA, F-sectors & surrounding areas</div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-form-card">
+          <h2 class="contact-form-title">Send us a message</h2>
+          <p class="contact-form-sub">We'll reply within 1 hour during business hours.</p>
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input class="form-input" id="c-name" type="text" placeholder="Full name"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone / WhatsApp</label>
+            <input class="form-input" id="c-phone" type="tel" placeholder="03XX-XXXXXXX"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="c-email" type="email" placeholder="you@email.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea class="form-input" id="c-msg" rows="4" placeholder="How can we help you?"></textarea>
+          </div>
+          <button class="btn btn-primary" style="width:100%;padding:14px;" onclick="sendContact()">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+// ── DATA & STATE ──
+const SERVICES_DATA={
+  'Plumbing':[
+    {name:'Leakage Fix',price:1200,desc:'Detect and repair pipe leaks'},
+    {name:'Pipe Replacement',price:3500,desc:'Full pipe replacement'},
+    {name:'Tap Repair',price:800,desc:'Fix dripping or broken taps'},
+  ],
+  'Electrician':[
+    {name:'Switch Repair',price:700,desc:'Repair or replace faulty switches'},
+    {name:'Fan Installation',price:1500,desc:'Ceiling fan installation'},
+    {name:'Wiring Issue',price:4000,desc:'Diagnose and repair wiring faults'},
+  ],
+  'AC Services':[
+    {name:'General Service',price:1500,desc:'Full AC service'},
+    {name:'Gas Filling',price:5500,desc:'Refrigerant gas refill'},
+    {name:'Installation',price:4000,desc:'New AC unit installation'},
+  ]
+};
+let currentUser=null;
+let bookingState={service:null,subService:null,price:0,step:1};
+
+function getDB(key){try{return JSON.parse(localStorage.getItem('homira_'+key)||'[]');}catch{return[];}}
+function setDB(key,val){localStorage.setItem('homira_'+key,JSON.stringify(val));}
+function getUsers(){return getDB('users');}
+function getBookings(){return getDB('bookings');}
+
+// seed demo data
+(function(){
+  if(!localStorage.getItem('homira_seeded')){
+    setDB('users',[
+      {id:'u1',fname:'Demo',lname:'User',email:'demo@homira.pk',phone:'0311-1111111',pass:'demo123',role:'user'},
+      {id:'admin',fname:'Admin',lname:'Homira',email:'admin@homira.pk',phone:'0331-4447719',pass:'admin123',role:'admin'},
+    ]);
+    setDB('bookings',[
+      {id:'HOM-001',userId:'u1',service:'Plumbing',subService:'Leakage Fix',price:1200,name:'Demo User',phone:'0311-1111111',address:'F-10, Islamabad',date:'2024-06-10',time:'9:00 AM - 11:00 AM',notes:'',status:'completed',createdAt:new Date().toISOString()},
+      {id:'HOM-002',userId:'u1',service:'Electrician',subService:'Fan Installation',price:1500,name:'Demo User',phone:'0311-1111111',address:'F-10, Islamabad',date:'2024-06-12',time:'2:00 PM - 4:00 PM',notes:'Two fans',status:'pending',createdAt:new Date().toISOString()},
+    ]);
+    localStorage.setItem('homira_seeded','1');
+  }
+})();
+
+// ── NAVIGATION ──
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page)?.classList.add('active');
+  window.scrollTo(0,0);
+  if(page==='dashboard')loadDashboard();
+  if(page==='admin')loadAdmin();
+  updateNav();
+}
+function toggleMobile(){
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+function updateNav(){
+  const na=document.getElementById('nav-actions');
+  if(currentUser){
+    if(currentUser.role==='admin'){
+      na.innerHTML=`<button class="btn btn-outline" onclick="showPage('admin')">Admin Panel</button><button class="btn btn-primary" onclick="doLogout()">Logout</button>`;
+    } else {
+      na.innerHTML=`<button class="btn btn-outline" onclick="showPage('dashboard')">My Account</button><button class="btn btn-primary" onclick="doLogout()">Logout</button>`;
+    }
+  } else {
+    na.innerHTML=`<button class="btn btn-outline" onclick="showPage('auth')">Login</button><button class="btn btn-primary" onclick="showPage('booking')">Book Now</button>`;
+  }
+}
+
+// ── TOAST ──
+function toast(msg,type='default'){
+  const t=document.getElementById('toast');
+  const el=document.createElement('div');
+  el.className=`toast-item ${type}`;
+  el.innerHTML=`${type==='success'?'✓':type==='error'?'✗':'ℹ'} ${msg}`;
+  t.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// ── AUTH ──
+function switchAuthTab(tab){
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active',tab==='signup');
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';
+}
+function doLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  if(!email||!pass){toast('Please fill in all fields','error');return;}
+  const users=getUsers();
+  const user=users.find(u=>u.email===email&&u.pass===pass);
+  if(!user){toast('Invalid email or password','error');return;}
+  currentUser=user;
+  toast(`Welcome back, ${user.fname}!`,'success');
+  if(user.role==='admin'){showPage('admin');}else{showPage('dashboard');}
+}
+function doAdminLogin(){
+  document.getElementById('l-email').value='admin@homira.pk';
+  document.getElementById('l-pass').value='admin123';
+  doLogin();
+}
+function doSignup(){
+  const fname=document.getElementById('s-fname').value.trim();
+  const lname=document.getElementById('s-lname').value.trim();
+  const email=document.getElementById('s-email').value.trim();
+  const phone=document.getElementById('s-phone').value.trim();
+  const pass=document.getElementById('s-pass').value;
+  if(!fname||!lname||!email||!phone||!pass){toast('Please fill in all fields','error');return;}
+  if(pass.length<6){toast('Password must be at least 6 characters','error');return;}
+  const users=getUsers();
+  if(users.find(u=>u.email===email)){toast('An account with this email already exists','error');return;}
+  const newUser={id:'u'+Date.now(),fname,lname,email,phone,pass,role:'user'};
+  users.push(newUser);
+  setDB('users',users);
+  currentUser=newUser;
+  toast('Account created successfully!','success');
+  showPage('dashboard');
+}
+function doLogout(){
+  currentUser=null;
+  toast('Logged out successfully');
+  showPage('home');
+}
+
+// ── BOOKING ──
+function bookService(service,sub,price){
+  showPage('booking');
+  resetBooking();
+  if(service){
+    setTimeout(()=>selectService(service),100);
+    if(sub&&price){
+      setTimeout(()=>selectSub(sub,price),150);
+    }
+  }
+}
+function resetBooking(){
+  bookingState={service:null,subService:null,price:0,step:1};
+  document.querySelectorAll('.service-option').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('sub-services-list').style.display='none';
+  document.getElementById('price-summary-box').style.display='none';
+  document.getElementById('btn-step2').disabled=true;
+  document.getElementById('btn-step2').style.opacity='.4';
+  gotoStep(1);
+}
+function selectService(service){
+  bookingState.service=service;
+  bookingState.subService=null;
+  bookingState.price=0;
+  document.querySelectorAll('.service-option').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('sopt-'+service)?.classList.add('selected');
+  const subs=SERVICES_DATA[service]||[];
+  const inner=document.getElementById('sub-options-inner');
+  inner.innerHTML=subs.map(s=>`
+    <div class="sub-option" id="subopt-${s.name.replace(/\s/g,'_')}" onclick="selectSub('${s.name}',${s.price})">
+      <div><div class="sub-option-name">${s.name}</div><div style="font-size:12px;color:var(--text-muted);">${s.desc}</div></div>
+      <div class="sub-option-price">Rs ${s.price.toLocaleString()}</div>
+    </div>`).join('');
+  document.getElementById('sub-services-list').style.display='block';
+  document.getElementById('price-summary-box').style.display='none';
+  document.getElementById('btn-step2').disabled=true;
+  document.getElementById('btn-step2').style.opacity='.4';
+}
+function selectSub(name,price){
+  bookingState.subService=name;
+  bookingState.price=price;
+  document.querySelectorAll('.sub-option').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('subopt-'+name.replace(/\s/g,'_'))?.classList.add('selected');
+  document.getElementById('ps-service').textContent=name;
+  document.getElementById('ps-price').textContent='Rs '+price.toLocaleString();
+  document.getElementById('ps-total').textContent='Rs '+price.toLocaleString();
+  document.getElementById('price-summary-box').style.display='block';
+  document.getElementById('btn-step2').disabled=false;
+  document.getElementById('btn-step2').style.opacity='1';
+}
+function gotoStep(step){
+  bookingState.step=step;
+  [1,2,3,'success'].forEach(s=>{
+    const panel=document.getElementById('bpanel-'+s);
+    if(panel)panel.classList.toggle('active',s===step);
+  });
+  [1,2,3].forEach(i=>{
+    const tab=document.getElementById('btab-'+i);
+    if(tab){
+      tab.classList.toggle('active',i===step);
+      tab.classList.toggle('done',i<step);
+    }
+  });
+}
+function nextStep(step){
+  if(step===2){
+    if(!bookingState.service||!bookingState.subService){toast('Please select a service','error');return;}
+    const today=new Date().toISOString().split('T')[0];
+    document.getElementById('b-date').min=today;
+    gotoStep(2);
+  } else if(step===3){
+    const name=document.getElementById('b-name').value.trim();
+    const phone=document.getElementById('b-phone').value.trim();
+    const date=document.getElementById('b-date').value;
+    const time=document.getElementById('b-time').value;
+    const address=document.getElementById('b-address').value.trim();
+    if(!name||!phone||!date||!time||!address){toast('Please fill in all required fields','error');return;}
+    const notes=document.getElementById('b-notes').value.trim();
+    document.getElementById('booking-summary').innerHTML=`
+      <div style="display:grid;gap:12px;">
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Service</span><strong>${bookingState.service}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Sub-Service</span><strong>${bookingState.subService}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Name</span><strong>${name}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Phone</span><strong>${phone}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Date & Time</span><strong>${date} · ${time}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:var(--text-muted);">Address</span><strong>${address}</strong></div>
+        <hr style="border:none;border-top:1px solid var(--border);"/>
+        <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;"><span>Total Amount</span><span style="color:var(--orange);">Rs ${bookingState.price.toLocaleString()}</span></div>
+      </div>`;
+    gotoStep(3);
+  } else if(step===1){
+    gotoStep(1);
+  }
+}
+function confirmBooking(){
+  const name=document.getElementById('b-name').value.trim();
+  const phone=document.getElementById('b-phone').value.trim();
+  const date=document.getElementById('b-date').value;
+  const time=document.getElementById('b-time').value;
+  const address=document.getElementById('b-address').value.trim();
+  const notes=document.getElementById('b-notes').value.trim();
+  const bookingId='HOM-'+Math.floor(100000+Math.random()*900000);
+  const booking={
+    id:bookingId,
+    userId:currentUser?.id||'guest',
+    service:bookingState.service,
+    subService:bookingState.subService,
+    price:bookingState.price,
+    name,phone,address,date,time,notes,
+    status:'pending',
+    createdAt:new Date().toISOString()
+  };
+  const bookings=getBookings();
+  bookings.unshift(booking);
+  setDB('bookings',bookings);
+  document.getElementById('success-booking-id').textContent=bookingId;
+  [1,2,3].forEach(s=>document.getElementById('bpanel-'+s).classList.remove('active'));
+  document.getElementById('bpanel-success').classList.add('active');
+  document.querySelectorAll('.booking-step-tab').forEach(t=>t.classList.remove('active'));
+  toast('Booking confirmed! We\'ll WhatsApp you shortly.','success');
+}
+
+// ── DASHBOARD ──
+function loadDashboard(){
+  if(!currentUser){showPage('auth');return;}
+  document.getElementById('dash-username').textContent=currentUser.fname;
+  const allBookings=getBookings();
+  const myBookings=allBookings.filter(b=>b.userId===currentUser.id);
+  const pending=myBookings.filter(b=>b.status==='pending').length;
+  const completed=myBookings.filter(b=>b.status==='completed').length;
+  const spent=myBookings.reduce((s,b)=>s+b.price,0);
+  document.getElementById('ds-total').textContent=myBookings.length;
+  document.getElementById('ds-pending').textContent=pending;
+  document.getElementById('ds-completed').textContent=completed;
+  document.getElementById('ds-spent').textContent='Rs '+spent.toLocaleString();
+  renderBookingTable('dash-recent-bookings',myBookings.slice(0,5),false);
+  renderBookingTable('dash-all-bookings',myBookings,false);
+  document.getElementById('profile-info').innerHTML=`
+    <div style="display:grid;gap:14px;">
+      <div><div style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">Name</div><div style="font-size:15px;font-weight:500;">${currentUser.fname} ${currentUser.lname}</div></div>
+      <div><div style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">Email</div><div style="font-size:15px;">${currentUser.email}</div></div>
+      <div><div style="font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">Phone</div><div style="font-size:15px;">${currentUser.phone}</div></div>
+    </div>`;
+}
+function switchDashPanel(panel){
+  ['overview','bookings','profile'].forEach(p=>{
+    document.getElementById('dash-'+p)?.classList.toggle('active',p===panel);
+  });
+  document.querySelectorAll('.dashboard-sidebar .sidebar-item').forEach((el,i)=>{
+    el.classList.toggle('active',i===['overview','bookings','profile'].indexOf(panel));
+  });
+}
+
+// ── ADMIN ──
+function loadAdmin(){
+  if(!currentUser||currentUser.role!=='admin'){showPage('auth');return;}
+  const bookings=getBookings();
+  const users=getUsers().filter(u=>u.role!=='admin');
+  document.getElementById('adm-total').textContent=bookings.length;
+  document.getElementById('adm-pending').textContent=bookings.filter(b=>b.status==='pending').length;
+  document.getElementById('adm-completed').textContent=bookings.filter(b=>b.status==='completed').length;
+  document.getElementById('adm-revenue').textContent='Rs '+bookings.reduce((s,b)=>s+b.price,0).toLocaleString();
+  document.getElementById('admin-badge').textContent=bookings.filter(b=>b.status==='pending').length;
+  renderBookingTable('adm-recent',bookings.slice(0,5),true);
+  renderBookingTable('adm-all-bookings',bookings,true);
+  // customers
+  document.getElementById('adm-customers-list').innerHTML=`
+    <table class="booking-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th></tr></thead>
+      <tbody>${users.map(u=>{
+        const uBookings=bookings.filter(b=>b.userId===u.id).length;
+        return `<tr><td>${u.fname} ${u.lname}</td><td>${u.email}</td><td>${u.phone}</td><td>${uBookings}</td></tr>`;
+      }).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;">No customers yet</td></tr>'}</tbody>
+    </table>`;
+}
+function switchAdminPanel(panel){
+  ['overview','bookings','customers'].forEach(p=>{
+    document.getElementById('adm-'+p)?.classList.toggle('active',p===panel);
+  });
+  ['overview','bookings','customers'].forEach(p=>{
+    document.getElementById('adm-nav-'+p)?.classList.toggle('active-nav',p===panel);
+  });
+}
+function updateStatus(id,status){
+  const bookings=getBookings();
+  const b=bookings.find(b=>b.id===id);
+  if(b){b.status=status;setDB('bookings',bookings);}
+  loadAdmin();
+  toast('Booking status updated!','success');
+}
+function deleteBooking(id){
+  if(!confirm('Delete this booking?'))return;
+  const bookings=getBookings().filter(b=>b.id!==id);
+  setDB('bookings',bookings);
+  loadAdmin();
+  toast('Booking deleted','success');
+}
+
+// ── SHARED TABLE ──
+function renderBookingTable(containerId,bookings,isAdmin){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  if(!bookings.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No bookings yet</div>';return;}
+  const statusBadge=s=>{
+    const map={pending:'status-pending',confirmed:'status-confirmed',completed:'status-completed',cancelled:'status-cancelled'};
+    return `<span class="status-badge ${map[s]||'status-pending'}">${s}</span>`;
+  };
+  el.innerHTML=`<table class="booking-table">
+    <thead><tr><th>Booking ID</th><th>Service</th>${isAdmin?'<th>Customer</th>':''}<th>Date</th><th>Amount</th><th>Status</th>${isAdmin?'<th>Actions</th>':''}</tr></thead>
+    <tbody>${bookings.map(b=>`<tr>
+      <td style="font-family:var(--font);font-weight:600;color:var(--orange);">${b.id}</td>
+      <td>${b.service}<br><span style="font-size:11px;color:var(--text-muted);">${b.subService}</span></td>
+      ${isAdmin?`<td>${b.name}<br><span style="font-size:11px;color:var(--text-muted);">${b.phone}</span></td>`:''}
+      <td>${b.date||'-'}<br><span style="font-size:11px;color:var(--text-muted);">${b.time||''}</span></td>
+      <td style="font-weight:600;">Rs ${b.price.toLocaleString()}</td>
+      <td>${statusBadge(b.status)}</td>
+      ${isAdmin?`<td><div class="admin-table-actions">
+        <button class="action-btn action-btn-confirm" onclick="updateStatus('${b.id}','confirmed')">Confirm</button>
+        <button class="action-btn action-btn-complete" onclick="updateStatus('${b.id}','completed')">Complete</button>
+        <button class="action-btn action-btn-delete" onclick="deleteBooking('${b.id}')">Delete</button>
+      </div></td>`:''}
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ── CONTACT ──
+function sendContact(){
+  const name=document.getElementById('c-name').value.trim();
+  const msg=document.getElementById('c-msg').value.trim();
+  if(!name||!msg){toast('Please fill in name and message','error');return;}
+  toast('Message sent! We\'ll reply within 1 hour.','success');
+  ['c-name','c-phone','c-email','c-msg'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ── INIT ──
+const today=new Date().toISOString().split('T')[0];
+const dateInputs=document.querySelectorAll('input[type="date"]');
+dateInputs.forEach(i=>i.min=today);
+updateNav();
+</script>
+
+<!-- ══ HOMIRA AI CHATBOT ══ -->
+
+<style>
+/* ── Homira AI Chatbot Widget ── */
+#ai-chat-btn{
+  position:fixed;bottom:92px;right:28px;z-index:800;
+  width:56px;height:56px;background:var(--navy);color:#fff;
+  border:none;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(30,42,56,0.35);
+  transition:transform .2s,background .2s;
+}
+#ai-chat-btn:hover{background:var(--orange);transform:scale(1.08);}
+#ai-chat-btn svg{width:26px;height:26px;}
+#ai-chat-badge{
+  position:absolute;top:-4px;right:-4px;
+  width:18px;height:18px;background:var(--orange);
+  color:#fff;border-radius:50%;font-size:10px;font-weight:700;
+  display:none;align-items:center;justify-content:center;
+}
+#ai-chat-panel{
+  position:fixed;bottom:158px;right:28px;z-index:801;
+  width:380px;max-width:calc(100vw - 40px);
+  background:#fff;border-radius:20px;
+  box-shadow:0 20px 60px rgba(30,42,56,0.18);
+  display:none;flex-direction:column;overflow:hidden;
+  border:1px solid var(--border);max-height:520px;
+  font-family:var(--font-body);
+}
+#ai-chat-panel.open{display:flex;}
+.ai-header{
+  background:var(--navy);color:#fff;
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.ai-header-left{display:flex;align-items:center;gap:12px;}
+.ai-avatar{
+  width:38px;height:38px;background:var(--orange);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font);font-weight:700;font-size:14px;flex-shrink:0;
+}
+.ai-header-info h4{font-size:14px;font-weight:600;margin-bottom:1px;}
+.ai-header-info span{font-size:11px;opacity:.65;}
+.ai-header button{
+  background:rgba(255,255,255,0.12);border:none;color:#fff;
+  width:28px;height:28px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.ai-header button:hover{background:rgba(255,255,255,0.22);}
+.ai-header button svg{width:14px;height:14px;}
+#ai-messages{
+  flex:1;overflow-y:auto;padding:16px;display:flex;
+  flex-direction:column;gap:12px;min-height:200px;
+}
+.ai-msg{display:flex;gap:8px;max-width:90%;}
+.ai-msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.ai-msg.bot{align-self:flex-start;}
+.ai-bubble{
+  padding:10px 14px;border-radius:14px;font-size:13.5px;
+  line-height:1.55;word-break:break-word;
+}
+.ai-msg.bot .ai-bubble{background:var(--grey);color:var(--text);border-bottom-left-radius:4px;}
+.ai-msg.user .ai-bubble{background:var(--navy);color:#fff;border-bottom-right-radius:4px;}
+.ai-estimate-card{
+  margin-top:10px;background:var(--orange-soft);
+  border:1px solid #FFD9B5;border-radius:12px;padding:14px;font-size:13px;
+}
+.ai-estimate-card .est-header{
+  font-family:var(--font);font-weight:700;font-size:14px;
+  color:var(--navy);margin-bottom:10px;
+}
+.ai-estimate-row{
+  display:flex;justify-content:space-between;
+  padding:4px 0;color:var(--charcoal);
+}
+.ai-estimate-row.total{
+  border-top:1px solid #FFD9B5;margin-top:6px;padding-top:8px;
+  font-weight:700;font-size:14px;color:var(--navy);
+}
+.ai-estimate-disclaimer{
+  font-size:11px;color:var(--text-muted);margin-top:10px;
+  padding-top:8px;border-top:1px solid #FFD9B5;line-height:1.5;
+}
+.ai-estimate-book{
+  margin-top:10px;background:var(--orange);color:#fff;
+  border:none;border-radius:99px;padding:8px 18px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:.2s;width:100%;
+}
+.ai-estimate-book:hover{background:var(--orange-light);}
+.ai-safety-card{
+  background:#FEF2F2;border:1px solid #FECACA;
+  border-radius:12px;padding:14px;font-size:13px;
+  color:#7F1D1D;line-height:1.6;
+}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:10px 14px;}
+.ai-typing span{
+  width:7px;height:7px;background:var(--text-muted);
+  border-radius:50%;animation:aiDot 1.2s infinite;
+}
+.ai-typing span:nth-child(2){animation-delay:.2s;}
+.ai-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes aiDot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.ai-starters{
+  padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:6px;flex-shrink:0;
+}
+.ai-starter-chip{
+  background:var(--grey);border:1px solid var(--border);
+  color:var(--charcoal);padding:6px 12px;border-radius:99px;
+  font-size:12px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.ai-starter-chip:hover{background:var(--orange-soft);border-color:var(--orange);color:var(--orange);}
+.ai-input-area{
+  padding:12px 14px;border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:flex-end;flex-shrink:0;background:#fff;
+}
+#ai-input{
+  flex:1;border:1.5px solid var(--border);border-radius:10px;
+  padding:9px 12px;font-size:13.5px;font-family:var(--font-body);
+  resize:none;outline:none;max-height:80px;line-height:1.4;
+  color:var(--text);background:#fff;transition:.2s;
+}
+#ai-input:focus{border-color:var(--orange);}
+#ai-send{
+  background:var(--orange);color:#fff;border:none;
+  width:36px;height:36px;border-radius:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:.2s;
+}
+#ai-send:hover{background:var(--orange-light);}
+#ai-send:disabled{background:var(--grey2);cursor:not-allowed;}
+#ai-send svg{width:16px;height:16px;}
+.ai-error-banner{
+  background:#FEF2F2;color:#991B1B;font-size:12px;
+  padding:8px 14px;text-align:center;flex-shrink:0;
+  border-top:1px solid #FECACA;display:none;
+}
+@media(max-width:600px){
+  #ai-chat-panel{
+    bottom:0;right:0;left:0;width:100%;max-width:100%;
+    border-radius:20px 20px 0 0;max-height:80vh;
+  }
+  #ai-chat-btn{bottom:84px;}
+}
+</style>
+
+
+<!-- Homira AI Chat Button -->
+<button id="ai-chat-btn" onclick="toggleAIChat()" aria-label="Open Homira AI Assistant" title="Chat with Homira AI">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    <line x1="8" y1="9" x2="16" y2="9" stroke-width="1.5"/>
+    <line x1="8" y1="13" x2="13" y2="13" stroke-width="1.5"/>
+  </svg>
+  <span id="ai-chat-badge">1</span>
+</button>
+
+<!-- Homira AI Chat Panel -->
+<div id="ai-chat-panel" role="dialog" aria-modal="true" aria-label="Homira AI Assistant">
+  <div class="ai-header">
+    <div class="ai-header-left">
+      <div class="ai-avatar">AI</div>
+      <div class="ai-header-info">
+        <h4>Homira AI</h4>
+        <span id="ai-status-text">Home services assistant</span>
+      </div>
+    </div>
+    <button onclick="toggleAIChat()" aria-label="Close chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div id="ai-messages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+  <div class="ai-starters" id="ai-starters">
+    <button class="ai-starter-chip" data-msg="Leaking tap in my kitchen" tabindex="0">Leaking tap</button>
+    <button class="ai-starter-chip" data-msg="Electrical switch not working in my room" tabindex="0">Switch problem</button>
+    <button class="ai-starter-chip" data-msg="I need a ceiling fan installed" tabindex="0">Fan installation</button>
+    <button class="ai-starter-chip" data-msg="My AC is not cooling properly" tabindex="0">AC not cooling</button>
+  </div>
+  <div class="ai-error-banner" id="ai-error-banner"></div>
+  <div class="ai-input-area">
+    <textarea id="ai-input" rows="1" placeholder="Describe your home problem..." aria-label="Type your home problem" maxlength="1000"></textarea>
+    <button id="ai-send" aria-label="Send message" title="Send (Enter)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+
+<script>
+/* =====================================================
+   HOMIRA AI CHATBOT
+   Backend: FastAPI at BACKEND_URL
+   Model:   llama3.2:3b via Ollama
+   ===================================================== */
+var AI_BACKEND = 'http://localhost:8000';
+var aiHistory  = [];
+var aiOpen     = false;
+var aiLoading  = false;
+var aiGreeted  = false;
+
+/* ── toggle ── */
+function toggleAIChat() {
+  aiOpen = !aiOpen;
+  var panel = document.getElementById('ai-chat-panel');
+  var badge = document.getElementById('ai-chat-badge');
+  panel.classList.toggle('open', aiOpen);
+  if (aiOpen) {
+    badge.style.display = 'none';
+    document.getElementById('ai-input').focus();
+    if (!aiGreeted) {
+      aiGreeted = true;
+      addAIBotMsg(
+        "Hi! I am Homira AI, your home-services assistant.\n\n" +
+        "Tell me about a problem at home — like a leaking tap, a broken switch, " +
+        "or an AC that is not cooling — and I will help you understand the service and get an estimate.\n\n" +
+        "I support English and Roman Urdu.",
+        null, false
+      );
+    }
+  }
+}
+
+/* ── render helpers ── */
+function aiEscape(t) {
+  return t
+    .replace(/&/g,'\u0026amp;')
+    .replace(/</g,'\u0026lt;')
+    .replace(/>/g,'\u0026gt;')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/_(.*?)_/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addAIBotMsg(text, estimateData, isSafety) {
+  var msgs = document.getElementById('ai-messages');
+  var d = document.createElement('div');
+  d.className = 'ai-msg bot';
+
+  var inner = '';
+  if (isSafety) {
+    inner = '<div class="ai-bubble" style="padding:0;background:transparent;">'
+          + '<div class="ai-safety-card">' + aiEscape(text) + '</div>'
+          + '</div>';
+  } else {
+    inner = '<div class="ai-bubble">' + aiEscape(text) + '</div>';
+  }
+
+  if (estimateData && !isSafety) {
+    inner += buildAIEstCard(estimateData);
+  }
+  d.innerHTML = inner;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function buildAIEstCard(est) {
+  var priceLabel = est.is_estimate ? 'Starting from' : 'Fixed price';
+  var totalLabel = est.is_estimate ? 'Estimate total' : 'Total';
+  var h = '<div class="ai-estimate-card">';
+  h += '<div class="est-header">Price Estimate</div>';
+  h += '<div class="ai-estimate-row"><span>' + aiEscape(est.service_name) + '</span><span></span></div>';
+  h += '<div class="ai-estimate-row"><span>' + priceLabel + '</span>'
+     + '<span>Rs ' + est.base_price.toLocaleString() + '</span></div>';
+  if (est.quantity > 1) {
+    h += '<div class="ai-estimate-row"><span>Quantity</span><span>x ' + est.quantity + '</span></div>';
+  }
+  h += '<div class="ai-estimate-row total"><span>' + totalLabel + '</span>'
+     + '<span>Rs ' + est.subtotal.toLocaleString() + '</span></div>';
+  if (est.notes) {
+    h += '<div style="font-size:12px;color:var(--text-muted);margin-top:6px;">' + aiEscape(est.notes) + '</div>';
+  }
+  h += '<div class="ai-estimate-disclaimer">This is an estimate based on the information provided. '
+     + 'The final price may change after inspection.</div>';
+  // Determine category for booking prefill
+  var cat = est.category === 'plumbing' ? 'Plumbing'
+          : est.category === 'electrician' ? 'Electrician'
+          : 'AC Services';
+  h += '<button class="ai-estimate-book" onclick="aiGoBook(\'' + cat + '\')">'
+     + 'Book This Service</button>';
+  h += '</div>';
+  return h;
+}
+
+function addAIUserMsg(text) {
+  var msgs = document.getElementById('ai-messages');
+  var d = document.createElement('div');
+  d.className = 'ai-msg user';
+  d.innerHTML = '<div class="ai-bubble">' + aiEscape(text) + '</div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function aiShowTyping() {
+  var msgs = document.getElementById('ai-messages');
+  var d = document.createElement('div');
+  d.className = 'ai-msg bot';
+  d.id = 'ai-typing-indicator';
+  d.innerHTML = '<div class="ai-bubble ai-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function aiHideTyping() {
+  var el = document.getElementById('ai-typing-indicator');
+  if (el) el.remove();
+}
+
+function aiSetError(msg) {
+  var b = document.getElementById('ai-error-banner');
+  if (msg) { b.textContent = msg; b.style.display = 'block'; }
+  else { b.style.display = 'none'; }
+}
+
+function aiHideStarters() {
+  var s = document.getElementById('ai-starters');
+  if (s) s.style.display = 'none';
+}
+
+function aiGoBook(cat) {
+  showPage('booking');
+  toggleAIChat();
+  bookService(cat);
+  toast('Service pre-selected — complete your booking below.', 'success');
+}
+
+/* ── send ── */
+function aiSend() {
+  if (aiLoading) return;
+  var input = document.getElementById('ai-input');
+  var msg = input.value.trim();
+  if (!msg) { input.focus(); return; }
+  if (msg.length > 1000) { aiSetError('Message too long (max 1000 characters).'); return; }
+
+  aiHideStarters();
+  addAIUserMsg(msg);
+  aiHistory.push({role:'user', content:msg});
+  input.value = '';
+  input.style.height = 'auto';
+  aiSetError('');
+  aiLoading = true;
+  document.getElementById('ai-send').disabled = true;
+  input.disabled = true;
+  document.getElementById('ai-status-text').textContent = 'Thinking...';
+  aiShowTyping();
+
+  var payload = JSON.stringify({message: msg, history: aiHistory.slice(-10)});
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', AI_BACKEND + '/api/chat', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.timeout = 70000;
+
+  xhr.onload = function() {
+    aiHideTyping();
+    try {
+      var data = JSON.parse(xhr.responseText);
+      if (!data.success) {
+        addAIBotMsg(data.error ||
+          'Sorry, I ran into an issue. Please contact us via WhatsApp: 0331-4447719.', null, false);
+      } else if (data.is_safety_alert) {
+        addAIBotMsg(data.reply, null, true);
+      } else {
+        addAIBotMsg(data.reply, data.estimate, false);
+        if (data.reply) aiHistory.push({role:'assistant', content:data.reply});
+      }
+    } catch(e) {
+      addAIBotMsg('Something went wrong parsing the response. Please try again.', null, false);
+    }
+    aiDone();
+  };
+  xhr.ontimeout = function() {
+    aiHideTyping();
+    addAIBotMsg(
+      'The AI took too long to respond. Please try rephrasing your question '
+      + 'or contact us via WhatsApp: 0331-4447719.', null, false
+    );
+    aiDone();
+  };
+  xhr.onerror = function() {
+    aiHideTyping();
+    addAIBotMsg(
+      'Cannot connect to the AI backend. Make sure it is running: '
+      + 'cd backend && python -m uvicorn main:app --reload', null, false
+    );
+    aiSetError('Backend offline. Run: cd backend && python -m uvicorn main:app');
+    aiDone();
+  };
+  xhr.send(payload);
+}
+
+function aiDone() {
+  aiLoading = false;
+  document.getElementById('ai-send').disabled = false;
+  document.getElementById('ai-input').disabled = false;
+  document.getElementById('ai-status-text').textContent = 'Home services assistant';
+  document.getElementById('ai-input').focus();
+}
+
+/* ── init ── */
+document.addEventListener('DOMContentLoaded', function() {
+  /* auto-resize textarea */
+  var inp = document.getElementById('ai-input');
+  if (!inp) return;
+  inp.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+  });
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); aiSend(); }
+  });
+  document.getElementById('ai-send').addEventListener('click', aiSend);
+
+  /* starter chips */
+  document.querySelectorAll('.ai-starter-chip').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var msg = btn.getAttribute('data-msg');
+      if (msg) {
+        inp.value = msg;
+        aiSend();
+      }
+    });
+    btn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+  });
+
+  /* badge hint */
+  setTimeout(function() {
+    if (!aiOpen) {
+      var badge = document.getElementById('ai-chat-badge');
+      if (badge) { badge.style.display = 'flex'; }
+    }
+  }, 4000);
+});
+</script>
+
+</body>
+</html>
